@@ -103,7 +103,6 @@ def home():
 <!doctype html>
 <html>
     <head>
-        <meta charset="UTF-8">
         <title>НГТУ, ФБ, Лабораторные работы</title>
     </head>
     <body>
