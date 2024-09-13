@@ -129,7 +129,6 @@ def menu():
 <!doctype html>
 <html>
     <head>
-        <meta charset="UTF-8">
         <title>Лабораторная 1</title>
     </head>
     <body>
