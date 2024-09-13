@@ -95,3 +95,29 @@ def created():
     </body>
 </html>
 ''',  201 
+
+@app.route('/')
+@app.route('/index')
+def home():
+    return '''
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>НГТУ, ФБ, Лабораторные работы</title>
+</head>
+<body>
+    <header>
+        <h1>НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/lab1">Первая лабораторная</a></li>
+        </ul>
+    </nav>
+    <footer>
+        <p>Свиридова Софья Денисовна, ФБИ-22, 3 курс, 2024</p>
+    </footer>
+</body>
+</html>
+'''
