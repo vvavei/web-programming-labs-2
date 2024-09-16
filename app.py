@@ -87,7 +87,7 @@ def error_418():
 @app.route('/lab1/error_500')
 def trigger_error():
     result = 1 / 0
-    return str(result)
+    return result
 
 @app.errorhandler(500)
 def internal_server_error(err):
@@ -242,4 +242,7 @@ def menu():
     </body>
 </html>
 '''
+
+
+
 
