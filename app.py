@@ -259,7 +259,6 @@ def menu():
                 <li><a href="/lab1/error_418">Ошибка 418</a></li>
             </ul>
         </div>
-
     </body>
 </html>
 '''
