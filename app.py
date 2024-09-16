@@ -5,6 +5,72 @@ app = Flask(__name__)
 def not_found(err):
     return "нет такой страницы", 404
 
+@app.route("/lab1/error_400")
+def bad_request():
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <div>Неверный запрос</div>
+    </body>
+</html>
+''',  400 
+
+@app.route("/lab1/error_401")
+def error_401():
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <div>Запрос требует аутентификации пользователя</div>
+    </body>
+</html>
+''',  401
+
+@app.route("/lab1/error_402")
+def error_402():
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <div>Зарезервировано для будущего использования</div>
+    </body>
+</html>
+''',  402
+
+@app.route("/lab1/error_403")
+def error_403():
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <div>У вас нет разрешения на доступ к этому ресурсу</div>
+    </body>
+</html>
+''',  403
+
+@app.route("/lab1/error_405")
+def error_405():
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <div>Метод не поддерживается</div>
+    </body>
+</html>
+''',  405
+
+@app.route("/lab1/error_418")
+def error_418():
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <div>Я - чайник</div>
+    </body>
+</html>
+''',  418
+
 @app.route("/lab1/web")
 def web():
     return '''<!doctype html>
