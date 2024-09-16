@@ -84,6 +84,27 @@ def error_418():
 </html>
 ''',  418
 
+@app.route('/lab1/error_500')
+def trigger_error():
+    result = 1 / 0
+    return str(result)
+
+@app.errorhandler(500)
+def internal_server_error(err):
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <h1>Внутренняя ошибка сервера</h1>
+        <div>
+            Сервер обнаружил внутреннюю ошибку и не смог выполнить ваш запрос. 
+            Либо сервер перегружен, либо ошибка в приложении.
+        </div>
+    </body>
+</html>
+''',  500
+
+
 @app.route("/lab1/web")
 def web():
     return '''<!doctype html>
