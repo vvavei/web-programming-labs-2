@@ -238,7 +238,28 @@ def menu():
         называемых микрофреймворков — минималистичных каркасов
         веб-приложений, сознательно предоставляющих лишь самые базовые возможности.
         </div>   
-        <a href="/">Назад</a> 
+        <a href="/">Назад</a><br>
+        <h2>Список роутов</h2>
+        <div>
+            <ul>
+                <li><a href="/lab1/web">web-сервер на flask</a></li>
+                <li><a href="/lab1/author">Автор</a></li>
+                <li><a href="/lab1/oak">Дуб</a></li>
+                <li><a href="/lab1/counter">Сколько раз вы заходили</a></li>
+                <li><a href="/lab1/reset_counter">Очистка счетчика</a></li>
+                <li><a href="/lab1/info">Инфо</a></li>
+                <li><a href="/lab1/created">что-то создано...</a></li>
+                <li><a href="/lab1/student">Страница на выбор студента.Весна</a></li>
+                <li><a href="/lab1/error_500">Ошибка 500</a></li>
+                <li><a href="/lab1/error_400">Ошибка 400</a></li>
+                <li><a href="/lab1/error_401">Ошибка 401</a></li>
+                <li><a href="/lab1/error_402">Ошибка 402</a></li>
+                <li><a href="/lab1/error_403">Ошибка 403</a></li>
+                <li><a href="/lab1/error_405">Ошибка 405</a></li>
+                <li><a href="/lab1/error_418">Ошибка 418</a></li>
+            </ul>
+        </div>
+
     </body>
 </html>
 '''
