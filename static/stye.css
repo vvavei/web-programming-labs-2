@@ -1,0 +1,17 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: chocolate;
+}
+h1 {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+img {
+    margin-left: 100px;
+    width: 70%;
+}
+a {
+    margin-left: 760px;
+}

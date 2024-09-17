@@ -257,6 +257,7 @@ def menu():
                 <li><a href="/lab1/error_403">Ошибка 403</a></li>
                 <li><a href="/lab1/error_405">Ошибка 405</a></li>
                 <li><a href="/lab1/error_418">Ошибка 418</a></li>
+                <li><a href ="/lab1/source">Дополнительное задание</a></li>
             </ul>
         </div>
     </body>
@@ -292,4 +293,101 @@ def student_page():
         }
 
 
+#Дополнительное задание
+resource_created = False 
 
+@app.route('/lab1/source')
+def start_resource():
+    path = url_for("static", filename="пустырь.webp")
+    css = url_for("static", filename="stye.css")
+    global resource_created
+    status = "Магическая башня построена" if resource_created else "Магической башни еще нет!"
+    response = f'''
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{css}">
+    </head>
+    <body>
+        <h1>{status}</h1>
+        <a href="/lab1/create">Построить магическую башню</a><br>
+        <a href="/lab1/delete">Разрушить магическую башню</a><br>
+        <img src = "''' + path + '''">
+    </body>
+</html>
+'''
+    return response, 200
+
+@app.route('/lab1/create')
+def build_resource():
+    css = url_for("static", filename="stye.css")
+    path = url_for("static", filename="башня201.jpg")
+    path1 = url_for("static", filename="bashnya400.webp")
+    global resource_created
+    if resource_created:
+        return '''
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="''' + css + '''">
+    </head>
+    <body>
+        <h1>Магическая башня уже есть! Сначала нужно разрушить!!!!!</h1>
+        <a href="/lab1/source">Назад</a><br>
+        <img src = "''' + path1 + '''">
+    </body>
+</html>''', 400
+    else:
+        resource_created = True 
+        return '''
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="''' + css + '''">
+    </head>
+    <body>
+        <h1>Магическая башня построена!!</h1>
+        <a href="/lab1/source">Назад</a><br>
+        <img src = "''' + path + '''">
+    </body>
+</html>''', 201
+    
+@app.route('/lab1/delete')
+def resource_delete():
+    css = url_for("static", filename="stye.css")
+    path = url_for("static", filename="разруха.jpg")
+    path1 = url_for("static", filename="разруха.jpg")
+    global resource_created 
+    if resource_created:
+        resource_created = False 
+        return '''
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="''' + css + '''">
+    </head>
+    <body>
+        <h1>Башня разрушена!Можно строить новую!!</h1>
+        <a href="/lab1/source">Назад</a><br>
+        <img src = "''' + path + '''">
+    </body>
+</html>''', 200
+    else:
+        return '''
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="''' + css + '''">
+        <style>
+            img {
+                width: 50%
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Тут одни развалины!!!Сначала нужно построить, чтобы разрушить!!</h1>
+        <a href="/lab1/source">Назад</a><br>
+        <img src = "''' + path1 + '''">
+    </body>
+</html>
+''', 400 
