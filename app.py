@@ -378,11 +378,6 @@ def resource_delete():
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="''' + css + '''">
-        <style>
-            img {
-                width: 50%
-            }
-        </style>
     </head>
     <body>
         <h1>Тут одни развалины!!!Сначала нужно построить, чтобы разрушить!!</h1>
