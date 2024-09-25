@@ -386,3 +386,12 @@ def resource_delete():
     </body>
 </html>
 ''', 400 
+    
+@app.route('/lab2/a/')
+def a():
+    return 'со слэшем'
+
+@app.route('/lab2/a')
+def a2():
+    return 'без слэша'
+
