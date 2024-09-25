@@ -3,11 +3,11 @@
 <head>
     <meta charset = "UTF-8">
     <meta name = "viewport" content="width=device-width, initial-scale=1.0">
-    <title>Софья Свиридова. Лабораторная работа 2</title>
+    <title>Софья Свиридова. Лабораторная работа {{ number_lab }}</title>
 </head>
 <body>
     <header>
-        WEB-программмирование, часть 2. Лабораторная работа 2
+        WEB-программмирование, часть 2. Лабораторная работа {{ number_lab }}
     </header>
 
     <main>
@@ -15,7 +15,7 @@
     </main>
 
     <footer>
-        &copy; {{ name }}, ФБИ-22, 3 курс, 2024
+        &copy; {{ name }}, {{ group }}, {{ course }}, 2024
     </footer>
 </body>
 </html>
