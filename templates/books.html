@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+   <head>
+       <title>Список книг</title>
+   </head>
+   <body>
+       <h1>Список книг</h1>
+        <ol>
+            {% for book in books %}
+            <li> <b>Название книги:</b> {{ book.title }}<br> <b>Автор:</b> {{ book.author }}<br> 
+                <b>Жанр:</b> {{ book.genre }}<br> <b>Количество страниц:</b> {{ book.pages }} </li>
+            {% endfor %}
+        </ol>
+   </body>
+</html>
