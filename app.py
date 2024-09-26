@@ -212,6 +212,7 @@ def home():
         <div>
             <ul>
                 <li><a href="/lab1">Первая лабораторная</a></li>
+                <li><a href="/lab2">Вторая лабораторная</a></li>
             </ul>
         </div>
         <footer>
@@ -478,6 +479,7 @@ def example():
 @app.route('/lab2/')
 def lab2():
     return render_template('lab2.html')
+
 
 @app.route('/lab2/filters')
 def filtres():
