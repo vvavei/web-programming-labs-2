@@ -387,6 +387,11 @@ def resource_delete():
 </html>
 ''', 400 
     
+
+
+
+
+#Лабораторная работа 2
 @app.route('/lab2/a/')
 def a():
     return 'со слэшем'
@@ -400,14 +405,53 @@ flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашк
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
     if flower_id >= len(flower_list):
-        return "такого цветка нет", 404
+        return '''
+        <html>
+        <body>
+            <h1>Ошибка 404</h1>
+            <p>Такого цветка нет</p>
+            <a href="/lab2/flowers">Вернуться ко всем цветам</a>
+        </body>
+        </html>
+        ''', 404
     else:
-        return "цветок:" + flower_list[flower_id]
-    
+        return f'''
+        <html>
+        <body>
+            <h1>Цветок: {flower_list[flower_id]}</h1>
+            <a href="/lab2/flowers">Вернуться ко всем цветам</a>
+        </body>
+        </html>
+        '''
+
+@app.route('/lab2/clear_flowers')
+def clear_flowers():
+    flower_list.clear()
+    return '''
+    <html>
+    <body>
+        <h1>Список цветов очищен</h1>
+        <a href="/lab2/flowers">Вернуться ко всем цветам</a>
+    </body>
+    </html>
+    '''
+
+@app.route('/lab2/add_flower/')
 @app.route('/lab2/add_flower/<name>')
-def add_flower(name):
-    flower_list.append(name)
-    return f'''
+def add_flower(name = None):
+     if name == '' or name is None:
+        return '''
+<!doctype html>
+<html>
+   <body>
+   <h1>Ошибка 400</h1>
+   <p>вы не задали имя цветка</p>
+   </body>
+</html>
+''', 400
+     else:
+        flower_list.append(name)
+        return f'''
 <!doctype html>
 <html>
    <body>
@@ -439,3 +483,16 @@ def lab2():
 def filtres():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
     return render_template('filter.html', phrase = phrase)
+
+@app.route('/lab2/flowers')
+def all_flowers():
+    return f'''
+    <html>
+    <body>
+        <h1>Список всех цветов</h1>
+        <p>Всего цветов: {len(flower_list)}</p>
+        <p>Полный список: {flower_list}</p>
+        <a href="/lab2/clear_flowers">Очистить список цветов</a>
+    </body>
+    </html>
+    '''
