@@ -546,3 +546,35 @@ def operations(a, b):
     </body>
 </html>
 '''
+
+furnitures = [
+    {
+        'name': 'Диван',
+        'description': 'Удобная мебель для отдыха и приема гостей.',
+        'image': 'диван.jpg'
+    },
+    {
+        'name': 'Стул',
+        'description': 'Основной элемент для сидения за столом или в других местах.',
+        'image': 'стул.jpg'
+    },
+    {
+        'name': 'Стол',
+        'description': 'Используется для приема пищи, работы или учебы.',
+        'image': 'стол.jpg'
+    },
+    {
+        'name': 'Кровать',
+        'description': 'Мебель для сна и отдыха, важный элемент в спальне.',
+        'image': 'кровать.jpg'
+    },
+    {
+        'name': 'Шкаф',
+        'description': 'Хранит одежду, обувь и другие вещи, помогает поддерживать порядок.',
+        'image': 'шкаф.jpg'
+    }
+]
+
+@app.route('/lab2/furniture')
+def show_furniture():
+    return render_template('furniture.html', furnitures=furnitures) 
