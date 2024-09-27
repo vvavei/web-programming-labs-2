@@ -499,7 +499,7 @@ def all_flowers():
     </html>
     '''
 
-#Список книг
+
 books = [
     {"title": "1984", "author": "Джордж Оруэлл", "genre": "Дистопия", "pages": 328},
     {"title": "Мастер и Маргарита", "author": "Михаил Булгаков", "genre": "Роман", "pages": 384},
@@ -516,3 +516,33 @@ books = [
 @app.route('/lab2/books/')
 def book_list():
     return render_template('books.html', books=books)
+
+@app.route('/lab2/calc')
+def trasp():
+    return redirect("/lab2/calc/1/1")
+
+@app.route('/lab2/calc/<int:a>')
+def redirect_calc(a):
+    return redirect(url_for('operations', a=a, b=1))
+
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def operations(a, b):
+    multiplication = a * b
+    division = a / b if b != 0 else 'Ошибка: деление на ноль'
+    addition = a + b
+    subtraction = a - b
+    exponentiation = a ** b
+
+    return f'''
+<!doctype html>
+<html>
+    <body>
+    <h1>Расчет с параметрами:</h1>
+    <p>Умножение: {a} * {b} = {multiplication}</p>
+    <p>Деление: {a} / {b} = {division}</p>
+    <p>Сложение: {a} + {b} = {addition}</p>
+    <p>Вычитание: {a} - {b} = {subtraction}</p>
+    <p>Возведение в степень: {a} <sup>{b}</sup> = {exponentiation}</p>
+    </body>
+</html>
+'''
