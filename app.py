@@ -1,4 +1,4 @@
-from flask import Flask, url_for, redirect, render_template
+from flask import Flask, url_for, redirect, render_template, request
 app = Flask(__name__)
 
 @app.errorhandler(404)
@@ -401,7 +401,14 @@ def a():
 def a2():
     return 'без слэша'
 
-flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашка']
+# Список цветов и их цен
+flower_list = [
+    {'name': 'роза', 'price': 100},
+    {'name': 'тюльпан', 'price': 80},
+    {'name': 'незабудка', 'price': 60},
+    {'name': 'ромашка', 'price': 40}
+]
+
 
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
@@ -416,10 +423,12 @@ def flowers(flower_id):
         </html>
         ''', 404
     else:
+        flower = flower_list[flower_id]
         return f'''
         <html>
         <body>
-            <h1>Цветок: {flower_list[flower_id]}</h1>
+            <h1>Цветок: {flower['name']}</h1>
+            <p>Цена: {flower['price']} руб.</p>
             <a href="/lab2/flowers">Вернуться ко всем цветам</a>
         </body>
         </html>
@@ -437,32 +446,8 @@ def clear_flowers():
     </html>
     '''
 
-@app.route('/lab2/add_flower/')
-@app.route('/lab2/add_flower/<name>')
-def add_flower(name = None):
-     if name == '' or name is None:
-        return '''
-<!doctype html>
-<html>
-   <body>
-   <h1>Ошибка 400</h1>
-   <p>вы не задали имя цветка</p>
-   </body>
-</html>
-''', 400
-     else:
-        flower_list.append(name)
-        return f'''
-<!doctype html>
-<html>
-   <body>
-   <h1>Добавлен новый цветок</h1>
-   <p>Название нового цветка: {name} </p>
-   <p>Всего цветов: {len(flower_list)}</p>
-   <p>Полный список: {flower_list}</p>
-   </body>
-</html>
-'''   
+
+       
 @app.route('/lab2/example')
 def example():
     name, group, course, number_lab = 'Софья Свиридова','ФБИ-22','3 курс', '2'
@@ -488,13 +473,52 @@ def filtres():
 
 @app.route('/lab2/flowers')
 def all_flowers():
-    return f'''
+    return render_template('flowers.html', flowers=flower_list)
+
+@app.route('/lab2/delete_flower/<int:flower_id>', methods=['POST', 'GET'])
+def delete_flower(flower_id):
+    if flower_id >= len(flower_list):
+        return '''
+        <html>
+        <body>
+            <h1>Ошибка 404</h1>
+            <p>Такого цветка нет</p>
+            <a href="/lab2/flowers">Вернуться ко всем цветам</a>
+        </body>
+        </html>
+        ''', 404
+    else:
+        flower_list.pop(flower_id)
+        return redirect(url_for('all_flowers'))
+    
+@app.route('/lab2/add_flower/', methods=['GET', 'POST'])
+def add_flower():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        price = request.form.get('price')
+        if not name or not price.isdigit():
+            return '''
+            <html>
+            <body>
+                <h1>Ошибка 400</h1>
+                <p>Вы не задали имя цветка или цену</p>
+                <a href="/lab2/flowers">Вернуться ко всем цветам</a>
+            </body>
+            </html>
+            ''', 400
+        else:
+            flower_list.append({'name': name, 'price': int(price)})
+            return redirect(url_for('all_flowers'))
+    return '''
     <html>
     <body>
-        <h1>Список всех цветов</h1>
-        <p>Всего цветов: {len(flower_list)}</p>
-        <p>Полный список: {flower_list}</p>
-        <a href="/lab2/clear_flowers">Очистить список цветов</a>
+        <h1>Добавить новый цветок</h1>
+        <form method="post">
+            <label>Название цветка: <input type="text" name="name" required></label><br>
+            <label>Цена цветка: <input type="number" name="price" required></label><br>
+            <input type="submit" value="Добавить">
+        </form>
+        <a href="/lab2/flowers">Вернуться ко всем цветам</a>
     </body>
     </html>
     '''
