@@ -73,6 +73,7 @@ def error_418():
 </html>
 ''',  418
 
+
 @lab1.route('/lab1/error_500')
 def trigger_error():
     result = 1 / 0
@@ -91,6 +92,7 @@ def web():
             'X-Server': 'sample',
             'Content-Type': 'text/plain; charset=utf-8'
         }
+
 
 @lab1.route("/lab1/author")
 def author():
@@ -111,8 +113,8 @@ def author():
 
 @lab1.route("/lab1/oak")
 def oak():
-    path = url_for("static", filename="oak.jpg")
-    css_path = url_for("static", filename="lab1.css")
+    path = url_for("static", filename="lab1/oak.jpg")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return '''
 <!doctype html>
 <html>
@@ -222,7 +224,7 @@ def menu():
 
 @lab1.route('/lab1/student')
 def student_page():
-    kartinka = url_for("static", filename="vesna.jpg")
+    kartinka = url_for("static", filename="lab1/vesna.jpg")
     return ''' <!doctype html>
         <html>
             <body>
@@ -255,8 +257,8 @@ resource_created = False
 
 @lab1.route('/lab1/source')
 def start_resource():
-    path = url_for("static", filename="пустырь.webp")
-    css = url_for("static", filename="stye.css")
+    path = url_for("static", filename="lab1/пустырь.webp")
+    css = url_for("static", filename="lab1/stye.css")
     global resource_created
     status = "Магическая башня построена" if resource_created else "Магической башни еще нет!"
     response = f'''
@@ -278,9 +280,9 @@ def start_resource():
 
 @lab1.route('/lab1/create')
 def build_resource():
-    css = url_for("static", filename="stye.css")
-    path = url_for("static", filename="башня201.jpg")
-    path1 = url_for("static", filename="bashnya400.webp")
+    css = url_for("static", filename="lab1/stye.css")
+    path = url_for("static", filename="lab1/башня201.jpg")
+    path1 = url_for("static", filename="lab1/bashnya400.webp")
     global resource_created
     if resource_created:
         return '''
@@ -313,9 +315,9 @@ def build_resource():
 
 @lab1.route('/lab1/delete')
 def resource_delete():
-    css = url_for("static", filename="stye.css")
-    path = url_for("static", filename="разруха.jpg")
-    path1 = url_for("static", filename="разруха.jpg")
+    css = url_for("static", filename="lab1/stye.css")
+    path = url_for("static", filename="lab1/разруха.jpg")
+    path1 = url_for("static", filename="lab1/разруха.jpg")
     global resource_created 
     if resource_created:
         resource_created = False 

@@ -70,7 +70,7 @@ def example():
         {'name':'мандарины', 'price': 95},
         {'name': 'манго', 'price': 321}
     ]
-    return render_template('example.html', name = name, group = group, 
+    return render_template('lab2/example.html', name = name, group = group, 
                            course = course, number_lab = number_lab, fruits = fruits)
 
 
@@ -82,12 +82,12 @@ def lab():
 @lab2.route('/lab2/filters')
 def filtres():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
-    return render_template('filter.html', phrase = phrase)
+    return render_template('lab2/filter.html', phrase = phrase)
 
 
 @lab2.route('/lab2/flowers')
 def all_flowers():
-    return render_template('flowers.html', flowers=flower_list)
+    return render_template('lab2/flowers.html', flowers=flower_list)
 
 
 @lab2.route('/lab2/delete_flower/<int:flower_id>', methods=['POST', 'GET'])
@@ -104,7 +104,7 @@ def delete_flower(flower_id):
         ''', 404
     else:
         flower_list.pop(flower_id)
-        return redirect(url_for('all_flowers'))
+        return redirect(url_for('lab2.all_flowers'))
     
 
 @lab2.route('/lab2/add_flower/', methods=['GET', 'POST'])
@@ -123,8 +123,8 @@ def add_flower():
             </html>
             ''', 400
         else:
-            flower_list.lab2end({'name': name, 'price': int(price)})
-            return redirect(url_for('all_flowers'))
+            flower_list.append({'name': name, 'price': int(price)})
+            return redirect(url_for('lab2.all_flowers'))
     return '''
     <html>
     <body>
@@ -156,7 +156,7 @@ books = [
 
 @lab2.route('/lab2/books/')
 def book_list():
-    return render_template('books.html', books=books)
+    return render_template('lab2/books.html', books=books)
 
 
 @lab2.route('/lab2/calc')
@@ -223,4 +223,4 @@ furnitures = [
 
 @lab2.route('/lab2/furniture')
 def show_furniture():
-    return render_template('furniture.html', furnitures=furnitures) 
+    return render_template('lab2/furniture.html', furnitures=furnitures) 

@@ -7,7 +7,7 @@
         {% for flower in flowers %}
             <li>
                 {{ flower.name }} - {{ flower.price }} руб.
-                <a href="{{ url_for('delete_flower', flower_id=loop.index0) }}" method="post" style="display:inline;">Удалить</a>
+                <a href="{{ url_for('lab2.delete_flower', flower_id=loop.index0) }}" method="post" style="display:inline;">Удалить</a>
                 
             </li>
         {% endfor %}
