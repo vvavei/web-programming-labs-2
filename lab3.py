@@ -71,3 +71,36 @@ def pay():
 def success():
     price = request.args.get('price')  
     return render_template('lab3/success.html', price=price)
+
+@lab3.route('/lab3/settings')
+def settings():
+    # Получаем значения из cookies или параметров запроса
+    color = request.args.get('color')
+    background = request.args.get('background')
+    font_size = request.args.get('font_size')
+    font_weight = request.args.get('font_weight')
+
+    # Создаем ответ
+    resp = make_response(redirect('/lab3/settings'))
+
+    # Устанавливаем cookie для всех параметров, если они переданы
+    if color:
+        resp.set_cookie('color', color)
+    if background:
+        resp.set_cookie('background', background)
+    if font_size:
+        resp.set_cookie('font_size', font_size)
+    if font_weight:
+        resp.set_cookie('font_weight', font_weight)
+
+    # Если никаких параметров нет, рендерим страницу с текущими значениями
+    if not color and not background and not font_size and not font_weight:
+        color = request.cookies.get('color')
+        background = request.cookies.get('background')
+        font_size = request.cookies.get('font_size')
+        font_weight = request.cookies.get('font_weight')
+        resp = make_response(render_template('lab3/settings.html', color=color, background=background, font_size=font_size, font_weight=font_weight))
+
+    return resp
+
+
