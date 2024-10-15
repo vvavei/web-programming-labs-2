@@ -12,22 +12,46 @@
         <input type="color" id="color" name="color" value="{{ color or '' }}">
     </div>
     <div>
+      <button type="submit">ОК</button>
+    </div>
+  </form>
+
+
+  <form>
+    <div>
         <label class="label" for="background-color">Выберите цвет фона:</label>
         <input type="color" id="background-color" name="background" value="{{ background or '' }}">
     </div>
     <div>
+      <button type="submit">ОК</button>
+    </div>
+  </form>
+
+  <form>
+    <div>
         <label class="label" for="font-size">Выберите размер шрифта:</label>
         <input type="number" id="font-size" name="font_size" value="{{ font_size or '' }}" min="10" max="50">px
     </div>
+    <div>
+      <button type="submit">ОК</button>
+    </div>
+  </form>  
+
+  <form>
     <div>
         <label class="label" for="font-weight">Выберите жирность текста:</label>
         <select id="font-weight" name="font_weight">
             <option value="normal" {% if font_weight == "normal" %}selected{% endif %}>Обычный</option>
             <option value="bold" {% if font_weight == "bold" %}selected{% endif %}>Жирный</option>
         </select>
-     </div>
-    <div>
-        <button type="submit">ОК</button>
     </div>
+    <div>
+      <button type="submit">ОК</button>
+    </div>
+  </form>   
+   
+
+  <form action="/lab3/clear_settings">
+    <button type="submit">Очистить все cookies</button>
   </form>
 {% endblock %}

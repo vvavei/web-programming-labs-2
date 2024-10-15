@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{# номер лабораторной работы: #}
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <head>
+        <title>Форма железнодорожного билета</title>
+    </head>
+    <body>
+        <h1>Железнодорожный билет</h1>
+
+        <form>
+            <label>ФИО пассажира:</label><br>
+            <input type="text" name="full_name" value="{{ request.args.get('full_name', '') }}">
+            <span style="color: red">{{ errors.get('full_name') or '' }}</span><br><br>
+            
+
+            <label>Полка:</label><br>
+            <select name="seat_type">
+                <option value="">Выберите полку</option>
+                <option value="нижняя" {% if request.args.get('seat_type') == 'нижняя' %}selected{% endif %}>Нижняя</option>
+                <option value="верхняя" {% if request.args.get('seat_type') == 'верхняя' %}selected{% endif %}>Верхняя</option>
+                <option value="нижняя боковая" {% if request.args.get('seat_type') == 'нижняя боковая' %}selected{% endif %}>Нижняя боковая</option>
+                <option value="верхняя боковая" {% if request.args.get('seat_type') == 'верхняя боковая' %}selected{% endif %}>Верхняя боковая</option>
+            </select>
+            <span style="color: red">{{ errors.get('seat_type') or '' }}</span><br><br>
+
+            <label>С бельём?</label><br>
+            <input type="radio" name="linen" value="yes" {% if request.args.get('linen') == 'yes' %}checked{% endif %}> Да
+            <input type="radio" name="linen" value="no" {% if request.args.get('linen') == 'no' %}checked{% endif %}> Нет<br><br>
+
+            <label>С багажом?</label><br>
+            <input type="radio" name="luggage" value="yes" {% if request.args.get('luggage') == 'yes' %}checked{% endif %}> Да
+            <input type="radio" name="luggage" value="no" {% if request.args.get('luggage') == 'no' %}checked{% endif %}> Нет<br><br>
+
+            <label>Возраст:</label><br>
+            <input type="number" name="age" max= 120 value="{{ request.args.get('age', '') }}">
+            <span style="color: red">{{ errors.get('age') or '' }}</span><br><br>
+
+            <label>Пункт выезда:</label><br>
+            <input type="text" name="departure" value="{{ request.args.get('departure', '') }}">
+            <span style="color: red">{{ errors.get('departure') or '' }}</span><br><br>
+
+            <label>Пункт назначения:</label><br>
+            <input type="text" name="destination" value="{{ request.args.get('destination', '') }}">
+            <span style="color: red">{{ errors.get('destination') or '' }}</span><br><br>
+
+            <label>Дата поездки:</label><br>
+            <input type="date" name="travel_date" value="{{ request.args.get('travel_date', '') }}">
+            <span style="color: red">{{ errors.get('travel_date') or '' }}</span><br><br>
+
+            <label>Нужна ли страховка?</label><br>
+            <input type="radio" name="insurance" value="yes" {% if request.args.get('insurance') == 'yes' %}checked{% endif %}> Да
+            <input type="radio" name="insurance" value="no" {% if request.args.get('insurance') == 'no' %}checked{% endif %}> Нет<br><br>
+
+            <button type="submit">Сформировать билет</button>
+        </form>
+    </body>
+{% endblock %}
