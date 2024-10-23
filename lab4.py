@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 lab4 = Blueprint('lab4', __name__)
 
 
@@ -108,7 +108,7 @@ def step():
     x1 = int(x1)
     x2 = int(x2)
 
-    if x1 == 0 or x2 == 0:
+    if x1 == 0 and x2 == 0:
         return render_template('lab4/step.html', error = 'Оба поля равны нулю! Исправьте!')
 
     result = x1 ** x2
@@ -129,4 +129,4 @@ def tree():
     elif operation == 'plant':
         tree_count += 1 
 
-    return render_template('lab4/tree.html', tree_count = tree_count)        
+    return redirect('/lab4/tree')        
