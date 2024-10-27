@@ -216,3 +216,55 @@ def fridge():
 
     return render_template("lab4/fridge.html", error=error, message=message, snowflakes=snowflakes)
 
+@lab4.route('/lab4/grain-order', methods=['GET', 'POST'])
+def grain_order():
+    prices = {
+        'barley': 12345,
+        'oats': 8522,
+        'wheat': 8722,
+        'rye': 14111
+    }
+    
+    grain_names = {
+        'barley': 'Ячмень',
+        'oats': 'Овёс',
+        'wheat': 'Пшеница',
+        'rye': 'Рожь'
+    }
+    
+    error = None
+    message = None
+    discount_message = None
+
+    if request.method == 'POST':
+        grain_type = request.form.get('grain_type')
+        weight = request.form.get('weight')
+
+        # Проверка на пустое значение веса
+        if weight == '':
+            error = "Ошибка: не указан вес"
+        else:
+            try:
+                weight = float(weight)
+                if weight <= 0:
+                    error = "Ошибка: вес должен быть больше 0"
+                elif weight > 500:
+                    error = "Ошибка: такого объёма сейчас нет в наличии"
+                elif grain_type not in prices:
+                    error = "Ошибка: выбран некорректный тип зерна"
+                else:
+                    price_per_ton = prices[grain_type]
+                    total_cost = weight * price_per_ton
+                    discount_amount = 0  # Изначально скидка равна нулю
+
+                    if weight > 50:
+                        discount = 0.10
+                        discount_amount = total_cost * discount
+                        total_cost -= discount_amount
+                        discount_message = f"Применена скидка за большой объём: 10% (скидка: {discount_amount:.2f} руб)"
+
+                    message = f"Заказ успешно сформирован. Вы заказали {grain_names[grain_type]}. Вес: {weight} т. Сумма к оплате: {total_cost:.2f} руб"
+            except ValueError:
+                error = "Ошибка: некорректное значение веса"
+
+    return render_template("lab4/grain_order.html", error=error, message=message, discount_message=discount_message, prices=prices)
