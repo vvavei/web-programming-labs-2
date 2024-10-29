@@ -268,3 +268,73 @@ def grain_order():
                 error = "Ошибка: некорректное значение веса"
 
     return render_template("lab4/grain_order.html", error=error, message=message, discount_message=discount_message, prices=prices)
+
+
+@lab4.route('/lab4/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    if request.method == 'POST':
+        login = request.form.get('login')
+        password = request.form.get('password')
+        name = request.form.get('name')
+        gender = request.form.get('gender')
+
+        if not login or not password or not name or not gender:
+            error = 'Заполните все поля'
+        elif any(user['login'] == login for user in users):
+            error = 'Пользователь с таким логином уже существует'
+        else:
+            users.append({'login': login, 'password': password, 'name': name, 'gender': gender})
+            return redirect('/lab4/login')
+
+    return render_template('lab4/register.html', error=error)
+
+
+
+@lab4.route('/lab4/users')
+def users_list():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+
+    return render_template('lab4/users.html', users=users)
+
+
+@lab4.route('/lab4/delete-user', methods=['POST'])
+def delete_user():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+
+    login_to_delete = request.form.get('login')
+    global users
+    users = [user for user in users if user['login'] != login_to_delete]
+
+    # Если текущий пользователь удалил себя, разлогиниваем его
+    if session['login'] == login_to_delete:
+        session.pop('login', None)
+        return redirect('/lab4/login')
+
+    return redirect('/lab4/users')
+
+
+@lab4.route('/lab4/edit-user/<login>', methods=['GET', 'POST'])
+def edit_user(login):
+    if 'login' not in session or session['login'] != login:
+        return redirect('/lab4/login')
+
+    user = next((u for u in users if u['login'] == login), None)
+    if not user:
+        return redirect('/lab4/users')
+
+    if request.method == 'POST':
+        new_name = request.form.get('name')
+        new_password = request.form.get('password')
+
+        if new_name:
+            user['name'] = new_name
+        if new_password:
+            user['password'] = new_password
+
+        return redirect('/lab4/users')
+
+    return render_template('lab4/edit_user.html', user=user)
+
