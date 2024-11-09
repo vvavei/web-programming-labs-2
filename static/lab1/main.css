@@ -27,3 +27,35 @@ footer {
 .error {
     color: red;
 }
+
+.knowledge-base {
+    padding: 10px;
+}
+
+.navbar {
+    background-color: #e0f0f8;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn {
+    margin-right: 10px;
+    padding: 8px 12px;
+    background-color: #999999;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #bcdfe7;
+}
+
+.username {
+    font-weight: bold;
+}
