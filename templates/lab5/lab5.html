@@ -10,7 +10,13 @@
         <a href="/lab5/create" class="btn">Создать статью</a>
         <a href="/lab5/login" class="btn">Войти</a>
         <a href="/lab5/register" class="btn">Регистрация</a>
-        <span class="username">Anonymous</span>
+        <span class="username">
+            {% if login %}
+                {{ login }}
+            {% else %}
+                Anonymous
+            {% endif %}
+        </span>
     </div>
 </div>
 {% endblock %}
