@@ -59,3 +59,52 @@ footer {
 .username {
     font-weight: bold;
 }
+
+.article-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+}
+
+.article-title {
+    font-size: 1.2em;
+    margin: 0 0 8px;
+}
+
+.favorite-label {
+    color: #a14b4b;
+    font-weight: bold;
+}
+
+.article-text {
+    font-size: 1em;
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.article-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.action-button {
+    padding: 5px 10px;
+    font-size: 0.9em;
+    background-color: #577faa;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+}
+
+.delete-button {
+    background-color: #c5505c;
+}
+
+.delete-button:hover {
+    background-color: #c5505c;
+}
