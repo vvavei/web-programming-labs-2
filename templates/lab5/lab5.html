@@ -8,8 +8,16 @@
     <div class="navbar">
         <a href="/lab5/list" class="btn">Список статей</a>
         <a href="/lab5/create" class="btn">Создать статью</a>
-        <a href="/lab5/login" class="btn">Войти</a>
-        <a href="/lab5/register" class="btn">Регистрация</a>
+        <a href="/lab5/users" class="btn">Список пользователей</a>
+        <a href="/lab5/public" class="btn">Публичные статьи</a>
+        
+        {% if login %}
+            <a href="/lab5/logout" class="btn">Выйти</a>
+        {% else %}
+            <a href="/lab5/login" class="btn">Войти</a>
+            <a href="/lab5/register" class="btn">Регистрация</a>
+        {% endif %}
+        
         <span class="username">
             {% if login %}
                 {{ login }}

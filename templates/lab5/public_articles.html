@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5 — Публичные статьи{% endblock %}
+
+{% block main %}
+    <h1>Публичные статьи</h1>
+
+    {% if articles %}
+        {% for article in articles %}
+            <h2>{{ article['title'] }}{% if article['is_favorite'] %} - Любимая статья{% endif %}</h2>
+            <blockquote>{{ article['article_text'] }}</blockquote>
+        {% endfor %}
+    {% else %}
+        <p>Нет публичных статей.</p>
+    {% endif %}
+{% endblock %}

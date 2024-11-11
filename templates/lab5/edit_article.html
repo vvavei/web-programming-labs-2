@@ -3,8 +3,8 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-    <h1>Создание статьи</h1>
-    
+    <h1>Редактирование статьи</h1>
+
     {% if error %}
         <div style="color: red;">{{ error }}</div>
     {% endif %}
@@ -13,25 +13,19 @@
         <div>
             <label>
                 Название статьи:
-                <input type="text" name="title" maxlength="50" required>
+                <input type="text" name="title" maxlength="50" value="{{ article['title'] }}" required>
             </label>
         </div>
 
         <div>
             <label>
                 Текст статьи:
-                <textarea name="article_text" required></textarea>
-            </label>
-        </div>
-        
-        <div>
-            <label>
-                <input type="checkbox" name="is_public"> Сделать статью публичной
+                <textarea name="article_text">{{ article['article_text'] }}</textarea>
             </label>
         </div>
 
         <div>
-            <button type="submit">Создать статью</button>
+            <button type="submit">Сохранить изменения</button>
         </div>
     </form>
 {% endblock %}
