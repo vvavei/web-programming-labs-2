@@ -87,3 +87,13 @@ def put_film(id):
     film = request.get_json()
     films[id] = film
     return films[id]
+
+@lab7.route('/lab7/rest-api/films/', methods = ['POST'])
+def add_film():
+    if id < 0 or id >= len(films):
+        return "Film not found", 404
+     
+    film = request.get_json()
+    films.append(film)
+    new_film_index = len(films) - 1
+    return {"index": new_film_index}, 201
