@@ -88,6 +88,9 @@ def put_film(id):
     if film['description'] == '':
         return {'description': 'Заполните описание'}, 400
     
+    if film['title'] == '':
+        film['title'] = film['title_ru']
+    
     films[id] = film
     return films[id]
 
@@ -97,6 +100,9 @@ def add_film():
 
     if film['description'] == '':
         return {'description': 'Заполните описание'}, 400
+    
+    if film['title'] == '':
+        film['title'] = film['title_ru']
     
     films.append(film)
     new_film_index = len(films) - 1
