@@ -1,144 +1,170 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint,  render_template, request, redirect, jsonify, session, current_app
+from os import path
+import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
 import datetime
+
 lab7 = Blueprint('lab7', __name__)
+
+def db_connect():
+    if current_app.config['DB_TYPE'] == 'postgres':
+        conn = psycopg2.connect(
+            host='127.0.0.1',
+            database='abc',
+            user='postgres',
+            password='admin'
+        )
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+    else:
+        dir_path = path.dirname(path.realpath(__file__))
+        db_path = path.join(dir_path, "database.db")
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+
+    return conn, cur
+
+def db_close(conn, cur):
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 
 @lab7.route('/lab7/')
 def main():
     return render_template('lab7/lab7.html')
 
-films = [
-    {
-        "title": "Intouchables",
-        "title_ru": "1+1",
-        "year": 2011,
-        "description": "Пострадав в результате несчастного случая, \
-        богатый аристократ Филипп нанимает в помощники человека, \
-        который менее всего подходит для этой работы, – молодого жителя предместья Дрисса, \
-        только что освободившегося из тюрьмы. Несмотря на то, что Филипп прикован к инвалидному креслу, \
-        Дриссу удается привнести в размеренную жизнь аристократа дух приключений."
-    },
-     {
-        "title": "The Shawshank Redemption",
-        "title_ru": "Побег из Шоушенка",
-        "year": 1994,
-        "description": "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. \
-        Оказавшись в тюрьме под названием Шоушенк, \
-        он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. \
-        Каждый, кто попадает в эти стены, становится их рабом до конца жизни. \
-        Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, \
-        так и к охранникам, добиваясь их особого к себе расположения."
-    },
-    {
-        "title": "The Green Mile",
-        "title_ru": "Зеленая миля",
-        "year": 1999,
-        "description": "Пол Эджкомб — начальник блока смертников в тюрьме «Холодная гора», \
-        каждый из узников которого однажды проходит «зеленую милю» по пути к месту казни. \
-        Пол повидал много заключённых и надзирателей за время работы. \
-        Однако гигант Джон Коффи, обвинённый в страшном преступлении, \
-        стал одним из самых необычных обитателей блока."
-    },
-    {
-        "title": "Fight Club",
-        "title_ru": "Бойцовский клуб",
-        "year": 1999,
-        "description": "Сотрудник страховой компании страдает хронической бессонницей и отчаянно пытается вырваться из мучительно скучной жизни. \
-        Однажды в очередной командировке он встречает некоего Тайлера Дёрдена — харизматического торговца мылом с извращенной философией. \
-        Тайлер уверен, что самосовершенствование — удел слабых, а единственное, ради чего стоит жить, — саморазрушение. \
-        Проходит немного времени, и вот уже новые друзья лупят друг друга почем зря на стоянке перед баром, и очищающий мордобой доставляет им высшее блаженство. \
-        Приобщая других мужчин к простым радостям физической жестокости, они основывают тайный Бойцовский клуб, \
-        который начинает пользоваться невероятной популярностью."
-    },
-    {
-        "title": "Forrest Gump",
-        "title_ru": "Форрест Гамп",
-        "year": 1994,
-        "description": "Сидя на автобусной остановке, Форрест Гамп — не очень умный, \
-        но добрый и открытый парень — рассказывает случайным встречным историю своей необыкновенной жизни. \
-        С самого малолетства парень страдал от заболевания ног, соседские мальчишки дразнили его, но в один прекрасный день \
-        Форрест открыл в себе невероятные способности к бегу. \
-        Подруга детства Дженни всегда его поддерживала и защищала, но вскоре дороги их разошлись."
-    },
-]
-
-@lab7.route('/lab7/rest-api/films/', methods = ['GET'])
+@lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
-    return films
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM films ORDER BY id")
+    else:
+        cur.execute("SELECT * FROM films ORDER BY id")
+    films = cur.fetchall()
+    db_close(conn, cur)
+    return jsonify([dict(film) for film in films])
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['GET'])
 def get_film(id):
-    if id < 0 or id >= len(films):
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM films WHERE id = %s", (id,))
+    else:
+        cur.execute("SELECT * FROM films WHERE id = ?", (id,))
+    film = cur.fetchone()
+    db_close(conn, cur)
+    if film is None:
         return "Film not found", 404
-    return films[id]
+    return jsonify(dict(film))
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
 def del_film(id):
-    if id < 0 or id >= len(films):
-        return "Film not found", 404
-     
-    del films[id]
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("DELETE FROM films WHERE id = %s", (id,))
+    else:
+        cur.execute("DELETE FROM films WHERE id = ?", (id,))
+    db_close(conn, cur)
     return '', 204
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def put_film(id):
-    if id < 0 or id >= len(films):
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM films WHERE id = %s", (id,))
+    else:
+        cur.execute("SELECT * FROM films WHERE id = ?", (id,))
+    film = cur.fetchone()
+    if film is None:
+        db_close(conn, cur)
         return "Film not found", 404
     
-    film = request.get_json()
-    if film['description'] == '':
-        return {'description': 'Заполните описание'}, 400
+    data = request.get_json()
     
-    if len(film['description']) > 2000:
+    # Проверка описания
+    if data['description'] == '':
+        db_close(conn, cur)
+        return {'description': 'Заполните описание'}, 400
+    if len(data['description']) > 2000:
+        db_close(conn, cur)
         return {'description': 'Описание должно быть не более 2000 символов'}, 400
     
     # Проверка оригинального названия
-    if film['title'] == '' and film['title_ru'] == '':
+    if data['title'] == '' and data['title_ru'] == '':
+        db_close(conn, cur)
         return {'title': 'Заполните оригинальное или русское название'}, 400
     
     # Проверка русского названия
-    if film['title_ru'] == '':
-        return {'title_ru': 'Заполните русское название'}, 400
-    
-    year = int(film['year'])
-    current_year = datetime.datetime.now().year
-    if not (1895 <= year <= current_year):
-        return {'year': f'Год должен быть от 1895 до {current_year}'}, 400
-    
-    # Если оригинальное название пустое, устанавливаем его равным русскому названию
-    if film['title'] == '':
-        film['title'] = film['title_ru']
-    
-    films[id] = film
-    return films[id]
-
-@lab7.route('/lab7/rest-api/films/', methods = ['POST'])
-def add_film():
-    film = request.get_json()
-
-    if film['description'] == '':
-        return {'description': 'Заполните описание'}, 400
-    
-    if len(film['description']) > 2000:
-        return {'description': 'Описание должно быть не более 2000 символов'}, 400
-    
-     # Проверка оригинального названия
-    if film['title'] == '' and film['title_ru'] == '':
-        return {'title': 'Заполните оригинальное или русское название'}, 400
-    
-    # Проверка русского названия
-    if film['title_ru'] == '':
+    if data['title_ru'] == '':
+        db_close(conn, cur)
         return {'title_ru': 'Заполните русское название'}, 400
     
     # Проверка года
-    year = int(film['year'])
-    current_year = datetime.datetime.now().year
-    if not (1895 <= year <= current_year):
-        return {'year': f'Год должен быть от 1895 до {current_year}'}, 400
+    try:
+        film_year = int(data['film_year'])
+        current_year = datetime.datetime.now().year
+        if not (1895 <= film_year <= current_year):
+            db_close(conn, cur)
+            return {'film_year': f'Год должен быть от 1895 до {current_year}'}, 400
+    except ValueError:
+        db_close(conn, cur)
+        return {'film_year': 'Год должен быть числом'}, 400
     
     # Если оригинальное название пустое, устанавливаем его равным русскому названию
-    if film['title'] == '':
-        film['title'] = film['title_ru']
+    if data['title'] == '':
+        data['title'] = data['title_ru']
     
-    films.append(film)
-    new_film_index = len(films) - 1
-    return {"index": new_film_index}, 201
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("UPDATE films SET title = %s, title_ru = %s, film_year = %s, description = %s WHERE id = %s",
+                    (data['title'], data['title_ru'], data['film_year'], data['description'], id))
+    else:
+        cur.execute("UPDATE films SET title = ?, title_ru = ?, film_year = ?, description = ? WHERE id = ?",
+                    (data['title'], data['title_ru'], data['film_year'], data['description'], id))
+    db_close(conn, cur)
+    return jsonify(data)
+
+@lab7.route('/lab7/rest-api/films/', methods=['POST'])
+def add_film():
+    data = request.get_json()
+    
+    # Проверка описания
+    if data['description'] == '':
+        return {'description': 'Заполните описание'}, 400
+    if len(data['description']) > 2000:
+        return {'description': 'Описание должно быть не более 2000 символов'}, 400
+    
+    # Проверка оригинального названия
+    if data['title'] == '' and data['title_ru'] == '':
+        return {'title': 'Заполните оригинальное или русское название'}, 400
+    
+    # Проверка русского названия
+    if data['title_ru'] == '':
+        return {'title_ru': 'Заполните русское название'}, 400
+    
+    # Проверка года
+    try:
+        film_year = int(data['film_year'])
+        current_year = datetime.datetime.now().year
+        if not (1895 <= film_year <= current_year):
+            return {'film_year': f'Год должен быть от 1895 до {current_year}'}, 400
+    except ValueError:
+        return {'film_year': 'Год должен быть числом'}, 400
+    
+    # Если оригинальное название пустое, устанавливаем его равным русскому названию
+    if data['title'] == '':
+        data['title'] = data['title_ru']
+    
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("INSERT INTO films (title, title_ru, film_year, description) VALUES (%s, %s, %s, %s) RETURNING id",
+                    (data['title'], data['title_ru'], data['film_year'], data['description']))
+    else:
+        cur.execute("INSERT INTO films (title, title_ru, film_year, description) VALUES (?, ?, ?, ?)",
+                    (data['title'], data['title_ru'], data['film_year'], data['description']))
+    new_film_id = cur.fetchone()['id'] if current_app.config['DB_TYPE'] == 'postgres' else cur.lastrowid
+    db_close(conn, cur)
+    return {"index": new_film_id}, 201
+
