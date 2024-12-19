@@ -21,6 +21,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'lab8.login'
 login_manager.init_app(app)
 
+
 @login_manager.user_loader
 def load_users(login_id):
     return users.query.get(int(login_id))
@@ -50,7 +51,6 @@ app.register_blueprint(lab5)
 app.register_blueprint(lab6)
 app.register_blueprint(lab7)
 app.register_blueprint(lab8)
-
 
 @app.errorhandler(404)
 def not_found(err):

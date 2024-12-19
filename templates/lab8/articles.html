@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Ваши статьи{% endblock %}
+
+{% block main %}
+<h1>Ваши статьи</h1>
+
+<!-- Стили -->
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    header h1 {
+        margin: 0;
+    }
+
+    nav ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        background-color: #444;
+    }
+
+    nav ul li {
+        margin: 0 10px;
+    }
+
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    .article-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .article-item {
+        background-color: white;
+        border: 1px solid #ddd;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .article-item h3 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    .article-item p {
+        margin: 10px 0;
+        color: #555;
+    }
+
+    .button-link {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-right: 10px;
+        transition: background-color 0.3s;
+    }
+
+    .button-link:hover {
+        background-color: #0056b3;
+    }
+
+    .delete-button {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .delete-button:hover {
+        background-color: #a71d2a;
+    }
+
+    /* Стили для формы поиска */
+    .search-form {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-form input[type="text"] {
+        padding: 5px;
+        width: 200px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+
+    .search-form .button-link {
+        margin-left: 10px;
+    }
+
+    /* Стили для кнопок навигации */
+    .navigation-buttons {
+        margin-top: 20px;
+    }
+
+    .no-articles {
+        color: #777;
+        font-style: italic;
+    }
+</style>
+
+<form action="/lab8/search" method="get" class="search-form">
+    <input type="text" name="query" placeholder="Поиск по статьям" required>
+    <button type="submit" class="button-link reset-button">Искать</button>
+    <a href="/lab8/articles" class="button-link reset-button">Сбросить</a>
+</form>
+
+<!-- Список статей -->
+{% if articles %}
+    <ul class="article-list">
+        {% for article in articles %}
+            <li class="article-item">
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.article_text }}</p>
+
+                <!-- Кнопка редактирования -->
+                <a href="/lab8/edit/{{ article.id }}" class="button-link">Редактировать</a>
+
+                <!-- Форма удаления -->
+                <form action="/lab8/delete/{{ article.id }}" method="post" style="display:inline;" onsubmit="return confirm('Вы уверены, что хотите удалить эту статью?');">
+                    <button type="submit" class="delete-button">Удалить</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="no-articles">У вас ещё нет созданных статей.</p>
+{% endif %}
+
+
+<!-- Кнопки навигации -->
+<div class="navigation-buttons">
+    <a href="/lab8/create" class="button-link">Создать статью</a>
+    <a href="/lab8/" class="button-link">Вернуться назад</a>
+</div>
+{% endblock %}

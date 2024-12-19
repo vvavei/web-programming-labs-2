@@ -6,10 +6,10 @@
 <div class="knowledge-base">
     <h2>База знаний</h2>
     <div class="navbar">
-        <a href="/lab58/list" class="btn">Список статей</a>
+        <a href="/lab8/articles" class="btn">Список статей</a>
         <a href="/lab8/create" class="btn">Создать статью</a>
        
-        {% if login %}
+        {% if user.is_authenticated %}
             <a href="/lab8/logout" class="btn">Выйти</a>
         {% else %}
             <a href="/lab8/login" class="btn">Войти</a>
@@ -17,8 +17,8 @@
         {% endif %}
         
         <span class="username">
-            {% if login %}
-                {{ login }}
+            {% if user.is_authenticated %}
+                {{ user.login }}
             {% else %}
                 Anonymous
             {% endif %}
