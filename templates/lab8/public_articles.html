@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block main %}
+<div class="knowledge-base">
+    <h1>Публичные статьи</h1>
+
+    <!-- Стили -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .knowledge-base {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .article-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .article-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .article-item h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .article-item p {
+            margin: 10px 0;
+            color: #555;
+        }
+    </style>
+
+    <!-- Список публичных статей -->
+    {% if articles %}
+        <ul class="article-list">
+            {% for article in articles %}
+                <li class="article-item">
+                    <h3>{{ article.title }}</h3>
+                    <p>{{ article.article_text }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет доступных публичных статей.</p>
+    {% endif %}
+</div>
+{% endblock %}

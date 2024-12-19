@@ -86,15 +86,17 @@ def create_article():
         return render_template('lab8/create_article.html')
     
     title = request.form.get('title')
-    article_text = request.form.get('content')  # Используем 'content' из формы
+    content = request.form.get('content')
+    is_public = request.form.get('is_public') == 'on'  # Проверяем, отмечен ли флажок
 
-    if not title or not article_text:
+    if not title or not content:
         return render_template('lab8/create_article.html', error='Заголовок и содержимое статьи не могут быть пустыми')
     
     new_article = articles(
         title=title,
-        article_text=article_text,  # Используем правильное имя поля
-        login_id=current_user.id
+        article_text=content,
+        login_id=current_user.id,
+        is_public=is_public  # Сохраняем значение is_public
     )
     db.session.add(new_article)
     db.session.commit()
@@ -144,6 +146,21 @@ def delete_article(article_id):
     db.session.delete(article)
     db.session.commit()
 
-    flash("Статья успешно удалена!", "success")
     return redirect('/lab8/articles')
 
+@lab8.route('/lab8/public_articles')
+def public_articles():
+    # Получаем все публичные статьи
+    all_public_articles = articles.query.filter_by(is_public=True).all()
+    return render_template('lab8/public_articles.html', articles=all_public_articles)
+
+@lab8.route('/lab8/search', methods=['GET'])
+def search_articles():
+    query = request.args.get('query')  # Получаем строку поиска из параметров запроса
+
+    # Ищем статьи, содержащие строку поиска в заголовке или тексте
+    search_results = articles.query.filter(
+        (articles.title.contains(query)) | (articles.article_text.contains(query))
+    ).all()
+
+    return render_template('lab8/search_results.html', query=query, articles=search_results)

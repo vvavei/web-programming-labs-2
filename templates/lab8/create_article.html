@@ -6,6 +6,7 @@
 <div class="knowledge-base">
     <h1>Создание статьи</h1>
 
+    <!-- Стили -->
     <style>
         /* Общие стили */
         body {
@@ -69,23 +70,41 @@
         button:hover {
             background-color: #0056b3;
         }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 10px;
+        }
     </style>
 
+    <!-- Сообщение об ошибке -->
     {% if error %}
-        <div style="color: red;">{{ error }}</div>
+        <div class="error">{{ error }}</div>
     {% endif %}
 
+    <!-- Форма создания статьи -->
     <form action="/lab8/create" method="post">
         <div>
             <label>
-                Заголовок: <input type="text" name="title">
+                Заголовок: <input type="text" name="title" required>
             </label>
         </div>
 
         <div>
             <label>
-                Содержимое: <textarea name="content"></textarea>
+                Содержимое: <textarea name="content" required></textarea>
             </label>
+        </div>
+
+        <!-- Флажок для публикации статьи -->
+        <div class="checkbox-label">
+            <input type="checkbox" name="is_public" id="is_public">
+            <label for="is_public">Сделать статью публичной</label>
         </div>
 
         <button type="submit">Создать статью</button>
