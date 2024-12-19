@@ -50,7 +50,58 @@
             margin: 10px 0;
             color: #555;
         }
+
+        /* Стили для формы поиска */
+        .search-form {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-form input[type="text"] {
+            padding: 5px;
+            width: 200px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .search-form .button-link {
+            margin-left: 10px;
+        }
+
+        /* Стили для кнопок навигации */
+        .navigation-buttons {
+            margin-top: 20px;
+        }
+
+        .no-articles {
+            color: #777;
+            font-style: italic;
+        }
+
+        /* Стили для кнопок */
+        .button-link {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .button-link:hover {
+            background-color: #0056b3;
+        }
+        
     </style>
+
+    <form action="/lab8/search" method="get" class="search-form">
+        <input type="text" name="query" placeholder="Поиск по статьям" required>
+        <button type="submit" class="button-link reset-button">Искать</button>
+        <a href="/lab8/public_articles" class="button-link reset-button">Сбросить</a>
+    </form>
 
     <!-- Список публичных статей -->
     {% if articles %}
