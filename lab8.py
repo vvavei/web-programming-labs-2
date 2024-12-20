@@ -87,7 +87,7 @@ def create_article():
     
     title = request.form.get('title')
     content = request.form.get('content')
-    is_public = request.form.get('is_public') == 'on'  # Проверяем, отмечен ли флажок
+    is_public = request.form.get('is_public') == 'on'  
 
     if not title or not content:
         return render_template('lab8/create_article.html', error='Заголовок и содержимое статьи не могут быть пустыми')
@@ -96,7 +96,7 @@ def create_article():
         title=title,
         article_text=content,
         login_id=current_user.id,
-        is_public=is_public  # Сохраняем значение is_public
+        is_public=is_public  #сохраняем значение is_public
     )
     db.session.add(new_article)
     db.session.commit()
@@ -111,7 +111,7 @@ def edit_article(article_id):
     if not article:
         return "Статья не найдена", 404
 
-    # Проверяем, что статья принадлежит текущему пользователю
+    #проверяем статья принадлежит текущему пользователю
     if article.login_id != current_user.id:
         return "У вас нет прав на редактирование этой статьи", 403
 
@@ -150,7 +150,7 @@ def delete_article(article_id):
 
 @lab8.route('/lab8/public_articles')
 def public_articles():
-    # Получаем все публичные статьи
+
     all_public_articles = articles.query.filter_by(is_public=True).all()
     return render_template('lab8/public_articles.html', articles=all_public_articles)
 

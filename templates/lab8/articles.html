@@ -5,7 +5,7 @@
 {% block main %}
 <h1>Ваши статьи</h1>
 
-<!-- Стили -->
+
 <style>
 
     body {
@@ -93,7 +93,6 @@
         background-color: #a71d2a;
     }
 
-    /* Стили для формы поиска */
     .search-form {
         margin-bottom: 20px;
         display: flex;
@@ -111,7 +110,6 @@
         margin-left: 10px;
     }
 
-    /* Стили для кнопок навигации */
     .navigation-buttons {
         margin-top: 20px;
     }
@@ -122,14 +120,13 @@
     }
 </style>
 
-<!-- Форма поиска -->
+
 <form action="/lab8/search" method="get" class="search-form">
     <input type="text" name="query" placeholder="Поиск по статьям" required>
     <button type="submit" class="button-link reset-button">Искать</button>
     <a href="/lab8/articles" class="button-link reset-button">Сбросить</a>
 </form>
 
-<!-- Список статей -->
 {% if articles %}
     <ul class="article-list">
         {% for article in articles %}
@@ -137,10 +134,9 @@
                 <h3>{{ article.title }}</h3>
                 <p>{{ article.article_text }}</p>
 
-                <!-- Кнопка редактирования -->
                 <a href="/lab8/edit/{{ article.id }}" class="button-link">Редактировать</a>
 
-                <!-- Форма удаления -->
+             
                 <form action="/lab8/delete/{{ article.id }}" method="post" style="display:inline;" onsubmit="return confirm('Вы уверены, что хотите удалить эту статью?');">
                     <button type="submit" class="delete-button">Удалить</button>
                 </form>

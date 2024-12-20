@@ -6,9 +6,9 @@
 <div class="knowledge-base">
     <h1>Создание статьи</h1>
 
-    <!-- Стили -->
+ 
     <style>
-        /* Общие стили */
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -82,12 +82,12 @@
         }
     </style>
 
-    <!-- Сообщение об ошибке -->
+
     {% if error %}
         <div class="error">{{ error }}</div>
     {% endif %}
 
-    <!-- Форма создания статьи -->
+
     <form action="/lab8/create" method="post">
         <div>
             <label>
@@ -101,7 +101,7 @@
             </label>
         </div>
 
-        <!-- Флажок для публикации статьи -->
+    
         <div class="checkbox-label">
             <input type="checkbox" name="is_public" id="is_public">
             <label for="is_public">Сделать статью публичной</label>
