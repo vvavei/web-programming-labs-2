@@ -26,7 +26,7 @@
         form {
             background: #fff;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 300px;
             position: absolute; /* Абсолютное позиционирование */
@@ -69,11 +69,9 @@
         }
 
     </style>
-    
-    <h1>Поздравления</h1>
-    <form method="POST" action="{{ url_for('lab9.index') }}">
-        <label for="name">Введите ваше имя:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
-        <button type="submit">Далее</button>
+    <h1>Ваш пол</h1>
+    <form method="POST" action="{{ url_for('lab9.gender', name=name, age=age) }}">
+        <button type="submit" name="gender" value="male">Мужчина</button>
+        <button type="submit" name="gender" value="female">Женщина</button>
     </form>
 {% endblock %}
