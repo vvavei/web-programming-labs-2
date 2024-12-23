@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block lab %}Главная страница{% endblock %}
+
+{% block main %}
+    <h1>Добро пожаловать!</h1>
+    <p>Выберите действие:</p>
+    <a href="/rgz/register"><button>Зарегистрироваться</button></a>
+    <a href="/rgz/login"><button>Войти</button></a>
+
+    <!-- Кнопка для перехода на страницу с ячейками -->
+    <a href="/rgz/"><button>Перейти к ячейкам</button></a>
+{% endblock %}
