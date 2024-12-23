@@ -160,7 +160,7 @@ def get_cells():
             'is_authorized': False
         })
 
-@rgz.route('/rgz/cells/<int:cell_id>/book/', methods=['POST'])
+@rgz.route('/rgz/cells/<int:cell_id>/book/', methods=['PUT'])
 def book_cell(cell_id):
     login = session.get('login')
     if not login:
