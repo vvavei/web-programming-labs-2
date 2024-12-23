@@ -17,14 +17,11 @@
                 const freeCells = data.free_cells;
                 const isAuthorized = data.is_authorized; // Проверяем, авторизован ли пользователь
     
-                const tbody = document.getElementById('cell-list');
-                tbody.innerHTML = ''; // Очищаем таблицу перед обновлением
-    
-                // Удаляем старые элементы с информацией о количестве ячеек
-                const infoContainer = document.getElementById('cell-info-container');
-                infoContainer.innerHTML = '';
+                const cellGrid = document.getElementById('cell-grid');
+                cellGrid.innerHTML = ''; // Очищаем контейнер перед обновлением
     
                 // Добавляем информацию о количестве ячеек
+                const infoContainer = document.getElementById('cell-info-container');
                 infoContainer.innerHTML = `
                     <p>Общее количество ячеек: ${totalCells}</p>
                     <p>Забронировано ячеек: ${bookedCells}</p>
@@ -34,46 +31,33 @@
                 // Добавляем данные о ячейках
                 for (let i = 0; i < cells.length; i++) {
                     const cell = cells[i];
-                    const tr = document.createElement('tr');
+                    const cellDiv = document.createElement('div');
+                    cellDiv.classList.add('cell');
+                    cellDiv.innerText = cell.id;
     
-                    const tdId = document.createElement('td');
-                    const tdStatus = document.createElement('td');
-                    const tdUser = document.createElement('td');
-                    const tdActions = document.createElement('td');
-    
-                    tdId.innerText = cell.id;
-                    tdStatus.innerText = cell.is_booked ? 'Занята' : 'Свободна';
-                    tdUser.innerText = cell.user_login || 'Нет';
-    
-                    // Если пользователь авторизован, показываем кнопки для бронирования и отмены бронирования
-                    if (isAuthorized) {
-                        // Кнопка для бронирования
-                        const bookButton = document.createElement('button');
-                        bookButton.innerText = 'Забронировать';
-                        bookButton.onclick = function () {
-                            bookCell(cell.id);
-                        };
-    
-                        // Кнопка для отмены бронирования
-                        const cancelButton = document.createElement('button');
-                        cancelButton.innerText = 'Отменить бронь';
-                        cancelButton.onclick = function () {
-                            cancelCell(cell.id);
-                        };
-    
-                        tdActions.append(bookButton);
-                        tdActions.append(cancelButton);
+                    // Устанавливаем стиль в зависимости от статуса ячейки
+                    if (cell.is_booked) {
+                        cellDiv.classList.add('booked');
+                        const userLogin = document.createElement('div');
+                        userLogin.classList.add('user-login');
+                        userLogin.innerText = cell.user_login || 'Неизвестный пользователь';
+                        cellDiv.appendChild(userLogin);
                     } else {
-                        // Если пользователь не авторизован, показываем сообщение
-                        tdActions.innerText = 'Для бронирования нужно авторизоваться';
+                        cellDiv.classList.add('free');
                     }
     
-                    tr.append(tdId);
-                    tr.append(tdStatus);
-                    tr.append(tdUser);
-                    tr.append(tdActions);
+                    // Если пользователь авторизован, добавляем обработчики событий
+                    if (isAuthorized) {
+                        cellDiv.onclick = function () {
+                            if (cell.is_booked) {
+                                cancelCell(cell.id); // Отмена бронирования
+                            } else {
+                                bookCell(cell.id); // Бронирование
+                            }
+                        };
+                    }
     
-                    tbody.append(tr);
+                    cellGrid.appendChild(cellDiv);
                 }
             })
             .catch(function (error) {
@@ -81,48 +65,47 @@
             });
     }
 
-    // Функция для бронирования ячейки через PUT
     function bookCell(cellId) {
         fetch(`/rgz/cells/${cellId}/book/`, {
-            method: 'PUT', // Используем PUT 
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' }
         })
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                alert('Ячейка успешно забронирована');
-                getCellList(); // Обновляем список ячеек
-            }
-        })
-        .catch(function (error) {
-            console.error('Ошибка при бронировании ячейки:', error);
-        });
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert('Ячейка успешно забронирована');
+                    getCellList(); // Обновляем список ячеек
+                }
+            })
+            .catch(function (error) {
+                console.error('Ошибка при бронировании ячейки:', error);
+            });
     }
-
+    
     // Функция для отмены бронирования ячейки
     function cancelCell(cellId) {
         fetch(`/rgz/cells/${cellId}/cancel/`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' }
         })
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                alert('Бронь успешно отменена');
-                getCellList(); // Обновляем список ячеек
-            }
-        })
-        .catch(function (error) {
-            console.error('Ошибка при отмене бронирования ячейки:', error);
-        });
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert('Бронь успешно отменена');
+                    getCellList(); // Обновляем список ячеек
+                }
+            })
+            .catch(function (error) {
+                console.error('Ошибка при отмене бронирования ячейки:', error);
+            });
     }
 
     function deleteAccount() {
@@ -158,6 +141,40 @@
 {% endblock %}
 
 {% block main %}
+<style>
+    .cell {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #ccc;
+        display: inline-block;
+        margin: 5px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 14px;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .cell.booked {
+        background-color: black;
+        color: white;
+    }
+
+    .cell.free {
+        background-color: white;
+        color: black;
+    }
+
+    .cell .user-login {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        font-size: 10px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+</style>
     <h1>Камера хранения</h1>
     {% if session.login %}
     <p>Добро пожаловать, {{ session.login }}!</p>
@@ -170,18 +187,10 @@
     {% else %}
     <p>Добро пожаловать! Вы можете посмотреть список ячеек, но для бронирования нужно <a href="/rgz/login">авторизоваться</a>.</p>
     {% endif %}
-    <div id="cell-info-container"></div>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Статус</th>
-                <th>Забронирована пользователем</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody id="cell-list"></tbody>
-    </table>
 
+    <div id="cell-info-container"></div>
+    <div id="cell-grid">
+        <!-- Здесь будут отображаться ячейки -->
+    </div>
 {% endblock %}
 
