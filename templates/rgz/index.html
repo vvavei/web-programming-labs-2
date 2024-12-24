@@ -3,7 +3,48 @@
 {% block lab %}Главная страница{% endblock %}
 
 {% block main %}
-    <h1>Добро пожаловать!</h1>
+    <style>
+        /* Общие стили для страницы */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            margin: 10px 0;
+        }
+
+        /* Стили для кнопок */
+        button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Стили для ссылок */
+        a {
+            text-decoration: none;
+        }
+    </style>
+
+    <h1>Добро пожаловать в камеру хранения!</h1>
     <p>Выберите действие:</p>
     <a href="/rgz/register"><button>Зарегистрироваться</button></a>
     <a href="/rgz/login"><button>Войти</button></a>

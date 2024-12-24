@@ -142,6 +142,67 @@
 
 {% block main %}
 <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    p {
+        text-align: center;
+        color: #555;
+    }
+
+    /* Стили для кнопок */
+    button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button[type="submit"] {
+        background-color: #dc3545;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #a71d2a;
+    }
+
+    /* Стили для контейнера с информацией о ячейках */
+    #cell-info-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    #cell-info-container p {
+        display: inline-block;
+        margin: 0 10px;
+        font-size: 16px;
+        color: #333;
+    }
+
+    /* Стили для сетки ячеек */
+    #cell-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
     .cell {
         width: 50px;
         height: 50px;
@@ -182,7 +243,7 @@
         <button type="submit">Выйти</button>
     </form>
     <form onsubmit="deleteAccount(); return false;">
-        <button type="submit" style="color: red;">Удалить аккаунт</button>
+        <button type="submit" style="color: white;">Удалить аккаунт</button>
     </form>
     {% else %}
     <p>Добро пожаловать! Вы можете посмотреть список ячеек, но для бронирования нужно <a href="/rgz/login">авторизоваться</a>.</p>

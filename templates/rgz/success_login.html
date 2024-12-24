@@ -3,6 +3,44 @@
 {% block lab %}Успешная авторизация{% endblock %}
 
 {% block main %}
+    <style>
+        /* Общие стили для страницы */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #28a745; /* Зеленый цвет для успешного сообщения */
+            margin-top: 50px;
+        }
+
+        p {
+            color: #333;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+
+        /* Стили для ссылки */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
     <h1>Авторизация прошла успешно!</h1>
     <p>Добро пожаловать, {{ login }}!</p>
     <a href="/rgz/">Перейти к бронированию ячеек</a>
