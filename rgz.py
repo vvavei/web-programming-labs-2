@@ -51,6 +51,7 @@ def register():
     
     conn, cur = db_connect()
 
+    # Проверяем, существует ли пользователь с таким логином
     if current_app.config['DB_TYPE'] == 'postgres':
         cur.execute("SELECT login FROM users WHERE login=%s;", (login,))
     else:
@@ -62,6 +63,7 @@ def register():
     
     password_hash = generate_password_hash(password)
 
+    # Регистрируем нового пользователя
     if current_app.config['DB_TYPE'] == 'postgres':
         cur.execute("INSERT INTO users (login, password) VALUES (%s, %s);", (login, password_hash))
     else:
@@ -73,7 +75,6 @@ def register():
     session['login'] = login
     return render_template('rgz/success_login.html', login=login)
 
-# Роут для авторизации
 @rgz.route('/rgz/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -87,16 +88,18 @@ def login():
     
     conn, cur = db_connect()
 
+    # Проверяем, существует ли пользователь с таким логином
     if current_app.config['DB_TYPE'] == 'postgres':
         cur.execute("SELECT * FROM users WHERE login=%s;", (login,))
     else:
         cur.execute("SELECT * FROM users WHERE login=?;", (login,))
-    user = cur.fetchone()
 
+    user = cur.fetchone()
     if not user:
         db_close(conn, cur)
         return render_template('rgz/login.html', error='Логин и/или пароль неверны')
     
+    # Проверяем пароль
     if not check_password_hash(user['password'], password):
         db_close(conn, cur)
         return render_template('rgz/login.html', error='Логин и/или пароль неверны')
@@ -145,7 +148,6 @@ def get_cells():
     # Проверяем, авторизован ли пользователь
     login = session.get('login')
     if login:
-        # Если авторизован, возвращаем полные данные
         return jsonify({
             'cells': cells,
             'total_cells': total_cells,
@@ -154,7 +156,6 @@ def get_cells():
             'is_authorized': True
         })
     else:
-        # Если не авторизован, возвращаем данные без возможности бронирования
         return jsonify({
             'cells': cells,
             'total_cells': total_cells,
@@ -167,7 +168,7 @@ def get_cells():
 def book_cell(cell_id):
     login = session.get('login')
     if not login:
-        return jsonify({'error': 'Unauthorized'}), 401
+        return jsonify({'error': 'Неавторизован'}), 401
 
     conn, cur = db_connect()
 
@@ -179,7 +180,7 @@ def book_cell(cell_id):
     user = cur.fetchone()
     if not user:
         db_close(conn, cur)
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'error': 'Пользователь не найден'}), 404
 
     user_id = user['id']
 
@@ -192,7 +193,7 @@ def book_cell(cell_id):
 
     if not cell:
         db_close(conn, cur)
-        return jsonify({'error': 'Cell not found'}), 404
+        return jsonify({'error': 'Ячейка не найдена'}), 404
 
     if cell['is_booked']:
         db_close(conn, cur)
@@ -215,13 +216,13 @@ def book_cell(cell_id):
         cur.execute('UPDATE cells SET is_booked = TRUE, booked_by = ? WHERE id = ?', (user_id, cell_id))
     db_close(conn, cur)
 
-    return jsonify({'success': 'Cell successfully booked'}), 200
+    return jsonify({'success': 'Ячейка успешно забронирована'}), 200
 
 @rgz.route('/rgz/cells/<int:cell_id>/cancel/', methods=['DELETE'])
 def cancel_cell(cell_id):
     login = session.get('login')
     if not login:
-        return jsonify({'error': 'Unauthorized'}), 401
+        return jsonify({'error': 'Неавторизован'}), 401
 
     conn, cur = db_connect()
 
@@ -233,7 +234,7 @@ def cancel_cell(cell_id):
     user = cur.fetchone()
     if not user:
         db_close(conn, cur)
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'error': 'Пользователь не найден'}), 404
 
     user_id = user['id']
 
@@ -246,11 +247,11 @@ def cancel_cell(cell_id):
 
     if not cell:
         db_close(conn, cur)
-        return jsonify({'error': 'Cell not found'}), 404
+        return jsonify({'error': 'Ячейка не найдена'}), 404
 
     if not cell['is_booked']:
         db_close(conn, cur)
-        return jsonify({'error': 'Cell is not booked'}), 400
+        return jsonify({'error': 'Ячейка не забронирована'}), 400
 
     # Проверка, что текущий пользователь является владельцем брони
     if cell['booked_by'] != user_id:
@@ -264,7 +265,7 @@ def cancel_cell(cell_id):
         cur.execute('UPDATE cells SET is_booked = FALSE, booked_by = NULL WHERE id = ?', (cell_id,))
     db_close(conn, cur)
 
-    return jsonify({'success': 'Cell booking canceled'}), 200
+    return jsonify({'success': 'Бронь ячейки отменена'}), 200
 
 @rgz.route('/rgz/delete_account', methods=['DELETE'])
 def delete_account():
@@ -285,4 +286,4 @@ def delete_account():
     # Удаляем данные пользователя из сессии
     session.pop('login', None)
 
-    return jsonify({'success': 'Account deleted successfully'}), 200
+    return jsonify({'success': 'Аккаунт успешно удален'}), 200
