@@ -275,6 +275,24 @@ def delete_account():
 
     conn, cur = db_connect()
 
+    # Найти идентификатор пользователя по логину
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('SELECT id FROM users WHERE login = %s', (login,))
+    else:
+        cur.execute('SELECT id FROM users WHERE login = ?', (login,))
+    user = cur.fetchone()
+    if not user:
+        db_close(conn, cur)
+        return jsonify({'error': 'Пользователь не найден'}), 404
+
+    user_id = user['id']
+
+    # Удаляем все брони пользователя
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('UPDATE cells SET is_booked = FALSE, booked_by = NULL WHERE booked_by = %s', (user_id,))
+    else:
+        cur.execute('UPDATE cells SET is_booked = FALSE, booked_by = NULL WHERE booked_by = ?', (user_id,))
+
     # Удаляем аккаунт пользователя из базы данных
     if current_app.config['DB_TYPE'] == 'postgres':
         cur.execute("DELETE FROM users WHERE login=%s;", (login,))
@@ -286,4 +304,4 @@ def delete_account():
     # Удаляем данные пользователя из сессии
     session.pop('login', None)
 
-    return jsonify({'success': 'Аккаунт успешно удален'}), 200
+    return jsonify({'success': 'Аккаунт и все брони пользователя успешно удалены'}), 200
