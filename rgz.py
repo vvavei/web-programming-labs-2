@@ -124,7 +124,10 @@ def get_cells():
     # Добавляем логин пользователя, если ячейка забронирована
     for cell in cells:
         if cell['booked_by']:
-            cur.execute('SELECT login FROM users WHERE id = %s', (cell['booked_by'],))
+            if current_app.config['DB_TYPE'] == 'postgres':
+                cur.execute('SELECT login FROM users WHERE id = %s', (cell['booked_by'],))
+            else:
+                cur.execute('SELECT login FROM users WHERE id = ?', (cell['booked_by'],))
             user = cur.fetchone()
             if user:
                 cell['user_login'] = user['login']
@@ -169,7 +172,10 @@ def book_cell(cell_id):
     conn, cur = db_connect()
 
     # Найти идентификатор пользователя по логину
-    cur.execute('SELECT id FROM users WHERE login = %s', (login,))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('SELECT id FROM users WHERE login = %s', (login,))
+    else:
+        cur.execute('SELECT id FROM users WHERE login = ?', (login,))
     user = cur.fetchone()
     if not user:
         db_close(conn, cur)
@@ -178,7 +184,10 @@ def book_cell(cell_id):
     user_id = user['id']
 
     # Проверка на существование ячейки
-    cur.execute('SELECT is_booked, booked_by FROM cells WHERE id = %s', (cell_id,))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('SELECT is_booked, booked_by FROM cells WHERE id = %s', (cell_id,))
+    else:
+        cur.execute('SELECT is_booked, booked_by FROM cells WHERE id = ?', (cell_id,))
     cell = cur.fetchone()
 
     if not cell:
@@ -190,14 +199,20 @@ def book_cell(cell_id):
         return jsonify({'error': 'Ячейка уже забронирована'}), 400
 
     # Проверка, сколько ячеек уже забронировал пользователь
-    cur.execute('SELECT COUNT(*) FROM cells WHERE booked_by = %s', (user_id,))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('SELECT COUNT(*) FROM cells WHERE booked_by = %s', (user_id,))
+    else:
+        cur.execute('SELECT COUNT(*) FROM cells WHERE booked_by = ?', (user_id,))
     booked_count = cur.fetchone()['count']
     if booked_count >= 5:
         db_close(conn, cur)
         return jsonify({'error': 'Вы можете забронировать только 5 ячеек'}), 400
 
     # Бронирование ячейки
-    cur.execute('UPDATE cells SET is_booked = TRUE, booked_by = %s WHERE id = %s', (user_id, cell_id))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('UPDATE cells SET is_booked = TRUE, booked_by = %s WHERE id = %s', (user_id, cell_id))
+    else:
+        cur.execute('UPDATE cells SET is_booked = TRUE, booked_by = ? WHERE id = ?', (user_id, cell_id))
     db_close(conn, cur)
 
     return jsonify({'success': 'Cell successfully booked'}), 200
@@ -211,7 +226,10 @@ def cancel_cell(cell_id):
     conn, cur = db_connect()
 
     # Найти идентификатор пользователя по логину
-    cur.execute('SELECT id FROM users WHERE login = %s', (login,))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('SELECT id FROM users WHERE login = %s', (login,))
+    else:
+        cur.execute('SELECT id FROM users WHERE login = ?', (login,))
     user = cur.fetchone()
     if not user:
         db_close(conn, cur)
@@ -220,7 +238,10 @@ def cancel_cell(cell_id):
     user_id = user['id']
 
     # Проверка на существование ячейки
-    cur.execute('SELECT is_booked, booked_by FROM cells WHERE id = %s', (cell_id,))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('SELECT is_booked, booked_by FROM cells WHERE id = %s', (cell_id,))
+    else:
+        cur.execute('SELECT is_booked, booked_by FROM cells WHERE id = ?', (cell_id,))
     cell = cur.fetchone()
 
     if not cell:
@@ -234,10 +255,13 @@ def cancel_cell(cell_id):
     # Проверка, что текущий пользователь является владельцем брони
     if cell['booked_by'] != user_id:
         db_close(conn, cur)
-        return jsonify({'error': 'You can only cancel your own bookings'}), 403
+        return jsonify({'error': 'Вы можете отменять только свою бронь'}), 403
 
     # Отмена брони
-    cur.execute('UPDATE cells SET is_booked = FALSE, booked_by = NULL WHERE id = %s', (cell_id,))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute('UPDATE cells SET is_booked = FALSE, booked_by = NULL WHERE id = %s', (cell_id,))
+    else:
+        cur.execute('UPDATE cells SET is_booked = FALSE, booked_by = NULL WHERE id = ?', (cell_id,))
     db_close(conn, cur)
 
     return jsonify({'success': 'Cell booking canceled'}), 200
