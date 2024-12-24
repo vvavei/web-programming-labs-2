@@ -38,6 +38,8 @@ def index():
 def main():
     return render_template('rgz/cells.html')
 
+ALLOWED_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]\{\};':\",./<>?`~")
+
 @rgz.route('/rgz/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
@@ -46,9 +48,18 @@ def register():
     login = request.form.get('login')
     password = request.form.get('password')
 
+    # Проверка на заполнение всех полей
     if not (login and password):
         return render_template('rgz/register.html', error='Заполните все поля')
     
+    # Проверка логина на допустимые символы
+    if not all(char in ALLOWED_CHARS for char in login):
+        return render_template('rgz/register.html', error='Логин содержит недопустимые символы')
+    
+    # Проверка пароля на допустимые символы
+    if not all(char in ALLOWED_CHARS for char in password):
+        return render_template('rgz/register.html', error='Пароль содержит недопустимые символы')
+
     conn, cur = db_connect()
 
     # Проверяем, существует ли пользователь с таким логином
@@ -61,6 +72,7 @@ def register():
         db_close(conn, cur)
         return render_template('rgz/register.html', error='Такой пользователь уже существует')
     
+    # Хешируем пароль
     password_hash = generate_password_hash(password)
 
     # Регистрируем нового пользователя
